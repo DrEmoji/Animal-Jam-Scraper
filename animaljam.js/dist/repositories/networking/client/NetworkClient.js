@@ -93,6 +93,7 @@ export class NetworkClient extends EventEmitter {
                                     socket: proxySocket,
                                     host: this.options.host,
                                     port: this.options.port,
+                                    servername: this.options.host,
                                     rejectUnauthorized: false,
                                 });
                         const onConnect = () => {
@@ -130,6 +131,8 @@ export class NetworkClient extends EventEmitter {
         const connectionOptions = {
             host: this.options.host,
             port: this.options.port,
+            servername: this.options.host,
+            rejectUnauthorized: true
         };
         this.socket =
             this.options.domain === 'mobile'
@@ -146,6 +149,7 @@ export class NetworkClient extends EventEmitter {
             const onError = (err) => {
                 this.socket.removeListener('secureConnect', onConnect);
                 this.socket.removeListener('connect', onConnect);
+                console.log(err);
                 reject(err);
             };
             this.socket.once('secureConnect', onConnect);

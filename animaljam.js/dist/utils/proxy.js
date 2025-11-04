@@ -7,13 +7,16 @@ export function handleSocketResponse(data) {
         statusMessage: statusMessage || ''
     };
 }
+
 export function createConnectRequest(targetHost, targetPort, keepAlive = false) {
     const request = [
         `CONNECT ${targetHost}:${targetPort} HTTP/1.1`,
         `Host: ${targetHost}`,
+        `ServerName: ${targetHost}`,
         keepAlive && 'Proxy-Connection: Keep-Alive',
         keepAlive && 'Connection: Keep-Alive',
         '\r\n'
     ].join('\r\n');
+
     return Buffer.from(request);
 }

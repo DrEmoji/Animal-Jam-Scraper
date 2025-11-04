@@ -75,7 +75,7 @@ async function saveAllLogs(screen_name) {
         port: flashvars.smartfoxPort,
         auth_token: auth_token,
         screen_name: screen_name,
-        deploy_version: flashvars.deploy_version,
+        deploy_version: flashvars.deploy_version
     });
 
     await networking.connect();

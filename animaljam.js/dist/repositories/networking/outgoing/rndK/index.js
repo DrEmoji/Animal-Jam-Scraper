@@ -11,6 +11,6 @@ export class RndKMessage {
             .up()
             .up()
             .end({ headless: true });
-        return rndkXml.replace(/\"/g, '\'');
+        return rndkXml.replace(/\"/g, "'");
     }
 }
