@@ -19,25 +19,9 @@ class Client {
   }
 
   async init() {
-    const sessions = await loadSessions();
-    let auth_token = sessions[this.username] || "";
-    const isValid = await CheckSessions(auth_token);
-    if (!isValid) {
-      auth_token = await Login(this.username, this.password);
+    const auth_token = await Login(this.username, this.password);
 
-      if (auth_token) {
-        sessions[this.username] = auth_token;
-        await saveSessions(sessions);
-        console.log("Login successful!");
-      } else {
-        console.log("User has failed to Auth");
-        throw new Error("Auth Failed");
-      }
-    } else {
-      console.log("Using stored session token.");
-    }
-
-     if (!auth_token || typeof auth_token !== 'string' || auth_token.trim() === '') {
+    if (!auth_token || typeof auth_token !== 'string' || auth_token.trim() === '') {
       throw new Error("No valid auth token available. Aborting controller init.!");
     }
 
