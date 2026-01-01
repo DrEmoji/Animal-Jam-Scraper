@@ -1,149 +1,62 @@
-import { AnimalJamClient } from './animaljam.js/dist/index.js';
-import { blue, green, yellow } from 'colorette';
-import { askQuestion, loadJsonFile, loadJson, CheckClothWorth, sleep } from './utils.js';
-import fs from 'fs/promises';
-import path from 'path';
+const fs = require('fs').promises;
+const setTitle = require('console-title');
+const clc = require('cli-color');
+const Client = require('./Client'); 
 
-console.log(blue("Created By Doc/Dremoji"));
-
-let clothing;
-let denitems;
-let enstrings;
-
-let clothingLog = "";
-let denLog = "";
-let buddyLog = "";
-
-function logClothing(line) {
-    clothingLog += line + "\n";
+async function loadAccounts(filePath) {
+  const data = await fs.readFile(filePath, 'utf-8');
+  return data
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const [username, password] = line.split(':');
+      return { username, password };
+    });
 }
 
-function logDenItem(line) {
-    denLog += line + "\n";
-}
+async function InitClient({ username, password }) {
+  const client = new Client({ username, password });
 
-function logBuddy(line) {
-    buddyLog += line + "\n";
-}
+  await client.init();
 
-async function saveAllLogs(screen_name) {
-    const folderPath = path.join("output", screen_name);
-    await fs.mkdir(folderPath, { recursive: true });
+  client.controller.on('ready', async () => {
+    await client.Scrape();
+    client.controller.close();
+  });
 
-    await fs.writeFile(path.join(folderPath, "clothing.txt"), clothingLog);
-    await fs.writeFile(path.join(folderPath, "den_items.txt"), denLog);
-    await fs.writeFile(path.join(folderPath, "buddies.txt"), buddyLog);
+  client.controller.on('close', () => {
+    console.log(`Connection closed: ${username}`);
+  });
 
-    console.log(green(`Saved logs to ./output/${screen_name}/`));
+
+  return client;
 }
 
 (async () => {
-    clothing = await loadJsonFile("./defpacks/1000-clothing.json");
-    denitems = await loadJsonFile("./defpacks/1030-denitems.json");
-    enstrings = await loadJsonFile("./defpacks/10230-enstrings.json");
+  const accounts = await loadAccounts('accounts.txt');
 
-    let userData = null;
-    let nextpacket = false;
-    const received = { bl: false, il: false, di: false };
+  setTitle("Animal Jam Bot's | Created By Doc/DrEmoji |");
+  console.log(clc.green(`Animal Jam Scraper created by Doc/DrEmoji\n`));
+  console.log(clc.red(`By using this program you agree that the user known as DrEmoji will not offer any support or help you in anyway shape or form\n`));
+  console.log(clc.red(`You also agree that DrEmoji has no liability for what you do with this software and you accept all consequences if anything was to happen`));
 
-    function trySaveAll(screen_name) {
-        if (received.bl && received.il && received.di) {
-            saveAllLogs(screen_name);
+  const BATCH_SIZE = 5;
+
+  for (let i = 0; i < accounts.length; i += BATCH_SIZE) {
+    const batch = accounts.slice(i, i + BATCH_SIZE);
+
+    const results = await Promise.allSettled(
+      batch.map(async (credentials) => {
+        try {
+          await InitClient(credentials);
+          console.log(`Initialized: ${credentials.username}`);
+        } catch (err) {
+          console.error(`Failed to init: ${credentials.username}`, err);
         }
-    }
+      })
+    );
 
-    const details = await askQuestion("details (username:password): ");
-    const [screen_name, password] = details.split(":");
-
-    const client = new AnimalJamClient();
-    const flashvars = await client.flashvars.fetch();
-
-    const { auth_token } = await client.authenticator.login({
-        screen_name: screen_name,
-        password: password,
-    });
-
-    if (auth_token == undefined) {
-        console.log("AUTH FAILED!!!!!");
-        while (true) {
-            await sleep(1000);
-        }
-    }
-
-    const networking = await client.networking.createClient({
-        host: flashvars.smartfoxServer,
-        port: flashvars.smartfoxPort,
-        auth_token: auth_token,
-        screen_name: screen_name,
-        deploy_version: flashvars.deploy_version
-    });
-
-    await networking.connect();
-    console.log('Connected to server!');
-
-    networking.on('message', async (message) => {
-        const msg = message.toMessage();
-
-        if (msg.includes("playerWallSettings")) {
-            const jsonData = await loadJson(msg);
-            userData = jsonData?.b?.o?.params ?? null;
-        }
-
-        if (msg.includes("bl")) {
-            const splits = msg.split("%");
-            if (splits[4] == '0') {
-                for (let i = 7; i < splits.length; i += 4) {
-                    logBuddy(splits[i]);
-                }
-            }
-            received.bl = true;
-        }
-
-        if (msg.includes("il") && nextpacket) {
-            nextpacket = false;
-            const splits = msg.split("%");
-            for (let i = 6; i < splits.length; i += 5) {
-                if (i > 11) {
-                    const id = splits[i];
-                    if (clothing.hasOwnProperty(id)) {
-                        const item = clothing[id];
-                        const name = item["name"];
-                        if (CheckClothWorth(name)) {
-                            logClothing("SPECIAL - " + name);
-                        } else if (item["membersOnly"] == "1") {
-                            logClothing("MEMBER - " + name);
-                        } else {
-                            logClothing("REGULAR - " + name);
-                        }
-                    }
-                }
-            }
-            received.il = true;
-        }
-
-        if (msg.includes("di")) {
-            const ids = msg.split('%').filter(p => /^\d{3,}$/.test(p));
-            for (const id of ids) {
-                const nameStrId = denitems[id]?.nameStrId;
-                const abbrName = denitems[id]?.abbrName;
-                const name = enstrings[nameStrId] || abbrName;
-                if (name) {
-                    logDenItem(name);
-                }
-            }
-            received.di = true;
-        }
-    });
-
-    networking.on('ready', async () => {
-        await sleep(500);
-        console.log("Diamonds: " + green(userData.diamondsCount));
-        console.log("Gems: " + green(userData.gemsCount));
-        await networking.sendXTMessage(["bl", "-1"]);
-        nextpacket = true;
-        await networking.sendXTMessage(["di", "-1"]);
-        await networking.sendXTMessage(["ad", "-1", screen_name, userData.perUserAvId, 1]);
-        await sleep(3000);
-        trySaveAll(screen_name)
-    });
+    console.log(`Batch ${i / BATCH_SIZE + 1} complete (${results.length} accounts)`);
+  }
 })();
