@@ -6,18 +6,12 @@ class Client {
   username;
   password;
   connection;
-  roomid;
-  rainbow;
-  pose;
-  posing;
+
 
   constructor({ username, password }) {
     this.username = username;
     this.password = password;
     this.controller = null;
-    this.pose = "14";
-    this.posing = "0"
-    this.rainbow = false;
   }
 
   get connection() {
