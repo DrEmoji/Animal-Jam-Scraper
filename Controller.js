@@ -5,6 +5,7 @@ const RndKMessage = require('./packets/RndKMessage.js');
 const clc = require('cli-color');
 const { HttpsProxyAgent } = require('https-proxy-agent'); 
 const { DelimiterTransform } = require('./utils/Delimiter-Transform.js');
+const { wait } = require('./utils/Extra.js');
 const PacketHandler = require('./handlers/PacketHandler.js');
 const { ANIMAL_JAM_BASE_URL } = require('./utils/Constants.js')
 const axios = require("axios");
@@ -65,6 +66,7 @@ class NetworkController extends EventEmitter {
         } catch (err) {
             throw err;
         }
+        await wait(1000);
         await this.sendRawMessage(RndKMessage.build());
     }
 

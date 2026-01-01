@@ -3,6 +3,10 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
 
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const parentDir = path.resolve(__dirname, '..');
 const DEFPACK_PATH = path.resolve(parentDir, 'defpacks');
 const RESULTS_PATH = path.resolve(parentDir, 'results');
@@ -62,6 +66,7 @@ async function Login(username,password) {
 }
 
 module.exports = {
+    wait,
     Login,
     SaveResultJson,
     clothing,
