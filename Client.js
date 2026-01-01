@@ -1,5 +1,5 @@
 const { NetworkController } = require('./Controller.js');
-const { wait, getRndInteger, Login, CheckSessions, loadSessions, saveSessions, SaveResultJson, clothing, denitems, enstrings } = require("./utils/Extra.js");
+const { wait, Login, SaveResultJson, clothing, denitems, enstrings } = require("./utils/Extra.js");
 const clc = require('cli-color');
 
 class Client {
