@@ -1,7 +1,5 @@
 # 🐾 Animal Jam Account Scraper
 
-> ⚠️ **Disclaimer:** It does **not** use any proxies — all requests are sent directly from your IP.
-
 ---
 
 ### 🧰 Features
