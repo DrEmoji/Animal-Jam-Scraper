@@ -28,6 +28,8 @@ Results are dumped into `.txt` files inside a folder named after the screen name
 - This project is **not affiliated with, endorsed by, or associated with WildWorks** or any of its subsidiaries.
 - All trademarks, service marks, and game assets are the property of their respective owners.
 - **Any redistribution, modification, sale, commercial use, or public use of this software must include clear credit to the original author and a direct link to the original source code repository.**
+- **Important — Usage Restriction:** This project must **not** be used for any form of checking, cracking, guessing, validating, or otherwise attempting unauthorized access to accounts. It is provided solely to demonstrate how AJC networking works and how one could possibly extract information from an account for legitimate research or educational purposes.
+- **Do not use** this software to violate terms of service, perform credential-stuffing, account validation checks, or any activity that compromises account security, privacy, or other users' rights.
 
 ---
 
