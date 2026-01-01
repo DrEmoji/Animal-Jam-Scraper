@@ -27,7 +27,6 @@ async function InitClient({ username, password }) {
   return client;
 }
 
-
 setTitle("Animal Jam Scraper | Created By Doc/DrEmoji |");
 console.log(clc.green(`Animal Jam Scraper created by Doc/DrEmoji\n`));
 console.log(clc.red(`By using this program you agree that the user known as DrEmoji will not offer any support or help you in anyway shape or form\n`));
