@@ -159,10 +159,13 @@ class Client {
     this.Log("Diamonds: " + clc.green(this.controller.userData.diamondsCount));
     this.Log("Gems: " + clc.green(this.controller.userData.gemsCount));
 
+
+    const Currency = { Diamonds: this.controller.userData.diamondsCount, Gems: this.controller.userData.gemsCount }
     const ClothingItems = await this.ItemList();
     const DenItems =  await this.DenList();
     const Buddies =  await this.BuddyList();
 
+    SaveResultJson("currency.txt",this.username,Currency)
     SaveResultJson("clothing.txt",this.username,ClothingItems);
     SaveResultJson("denitems.txt",this.username,DenItems);
     SaveResultJson("buddies.txt",this.username,Buddies);
