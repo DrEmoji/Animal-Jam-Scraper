@@ -93,7 +93,7 @@ class Client {
         continue;
       }
 
-      const item = clothing[String(itemId)];
+      const item = clothing[idRaw];
 
       if (!item) {
         continue;
