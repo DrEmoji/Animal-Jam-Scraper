@@ -36,7 +36,7 @@ async function InitClient({ username, password }) {
 (async () => {
   const accounts = await loadAccounts('accounts.txt');
 
-  setTitle("Animal Jam Bot's | Created By Doc/DrEmoji |");
+  setTitle("Animal Jam Scraper | Created By Doc/DrEmoji |");
   console.log(clc.green(`Animal Jam Scraper created by Doc/DrEmoji\n`));
   console.log(clc.red(`By using this program you agree that the user known as DrEmoji will not offer any support or help you in anyway shape or form\n`));
   console.log(clc.red(`You also agree that DrEmoji has no liability for what you do with this software and you accept all consequences if anything was to happen`));
