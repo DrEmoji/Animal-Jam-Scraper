@@ -1,4 +1,3 @@
-const fs = require('fs').promises;
 const setTitle = require('console-title');
 const clc = require('cli-color');
 const Client = require('./Client'); 
