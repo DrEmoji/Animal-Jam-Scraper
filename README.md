@@ -46,6 +46,12 @@ You are solely responsible for how this software is used.
 
 ---
 
+## 📜 License
+
+This project is licensed under the **PolyForm Noncommercial License 1.0.0**, which allows noncommercial use, modification, and sharing while **prohibiting commercial, production, or hosted use**. See the full terms in [LICENSE](LICENSE) and comply with all usage restrictions noted above.
+
+---
+
 ## 🛑 Rights Holder Takedown Request
 
 If **WildWorks**, or any of its subsidiaries, affiliates, or authorized representatives, requests the **removal, shutdown, or termination** of this project:
